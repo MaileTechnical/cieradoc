@@ -14,23 +14,23 @@ Refer to the hand-coded message controller classes within the
 https://github.com/johnrwolfe/CarPark/tree/master/Deployment/src/main/java/deployment[CarPark Deployment project] 
 for examples.
 
-The CarPark example employs a _shell component_ to represent each type of client.  This idiom minimizes the number of generated files that must be manually modified and maintained when connecting a generated application to a client without modifying the model compiler.  However, the shell component adds no value and can be eliminated once the model compiler is capable of generating message controllers.
+The CarPark example employs a _shell component_ to represent each type of client.  This idiom minimizes the number of generated files that must be manually modified and maintained when connecting a generated application to a client without modifying the model compiler.  However, the shell component adds no value and can be eliminated once the model compiler is capable of generating message controllers. Furthermore, the functionality of the messsage controller can be absorbed by modiying the code generated for the port.
 
 === 3 Requirements
 
-. A mark specifies for which ports a message controller class must be generated.
+. A mark specifies that an application makes use of Spring servlet capability.
+. A mark specifies for which ports message controller functionality should be generated.
 . WebSocket communication within the Spring framework is supported.
 
 === 4 Analysis
 
-Currently, only WebSocket communication within the Spring framework is supported.  
+Currently, only WebSocket communication within the Spring framework is supported.
 
-Marking is applied on a port boundary, and the generated message controller class is placed 
-within the same package as the generated port class for the marked port.
+Note that this implementation requires that WebASocket port names be unique within a deployment.
+This implementation also limits a deployment to containining a single application.
 
-Eliminating the shell component requires that the generated port and message controller classes
-communicate directly with one another, so in addition to generating a message controller class
-this feature modifies the generated port class accordingly.
+Marking is applied on a port boundary, and the message controller functionality is generated as a modification to the generated port class for the marked port.
+
 
 === 5 Design
 
@@ -43,16 +43,20 @@ Messages originating from an application port activity invoke an outbound handle
 
 === 6 Work required
 
+. Add a mark named `ApplicationNature` to indicate that an application functions as a Spring servlet.
 . Add a mark named `SpringWebSocket` to be applied to a port.
-. Develop a template for generation of a Java class corresponding to a message controller.
-. Develop template(s) for both inbound and outbound message handling in the message controller.
-. Modify port templates as necessary to directly invoke the outbound message controller methods.
-. Develop a 'render message controller' operation to be invoked from the port render operation.
+. Develop template(s) for rendering WebSocket configuration and application initialization modification.
+. Develop template(s) to unpack parameters from inbound messages, directly invokng port activities.
+. Modify port templates as necessary to directly send serialized outbound messages.
 
 === 7 Implementation Comments
 
-Branch https://github.com/amullarney/ciera/tree/Ciera11970_msgCtrl is a prototype of message controller generation. +
-It does not take the step of eliminating the shell component.
+. The Application class is subtyped to allow for specialized rendering of initialization.
+. Port class uses a subtyped PortDescriptor class to allow for specialized rendering of message handling.
+. Port accessors render differently: Spring applications return a Port instance rather than creating it.
+. A generic `SpringMsgClass` is generated: its members are the message name and the serialized payload.
+. The Port send method is overridden 
+
 
 === 8 Acceptance Test
 

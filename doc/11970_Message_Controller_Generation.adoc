@@ -88,13 +88,9 @@ see: https://github.com/MaileTechnical/ciera/wiki/Marking
 
 === 10 Code Changes
 
-https://github.com/amullarney/ciera/tree/Ciera11970_msgCtrl
-
+https://github.com/amullarney/PilotPayroll/tree/11970_SpringWebSocket
 
 === 11 Document References
-
-In this section, list all the documents that the reader may need to refer to.
-Give the full path to reference a file.
 
 . [[dr-1]] https://support.onefact.net/issues/11970
 . [[dr-2]] https://support.onefact.net/issues/11971

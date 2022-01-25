@@ -76,6 +76,7 @@ As more than one Port may formalize to an interface, and Ports may be marked dif
 . A marking associates an 'endpoint' socket name with a port; this name is used to open a client connection.
 . A marking specifies a subscription topic associated with messages outgoing from a port.
 . A marking specifies the name of an optional message parameter whose value, if present, will be appended to the topic.
+. In several render operations, fragment rendering adds required imports; `getFormattedImports()` moves to the end.
 
 
 === 8 Acceptance Test

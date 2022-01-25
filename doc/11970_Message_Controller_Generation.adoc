@@ -20,7 +20,7 @@ The CarPark example also employs a _shell component_ to represent each type of c
 
 . A mark specifies that an application makes use of Spring servlet capability.
 . A mark specifies for which ports message controller functionality should be generated.
-. WebSocket communication within the Spring framework is supported.
+. WebSocket communication within the Spring framework is supported with appropriate marking.
 
 === 4 Analysis
 
@@ -46,11 +46,15 @@ The Spring framework requires that an inbound message handling method be prefixe
 
 Messages originating from an application port activity invoke an outbound handler method which creates an instance of the appropriate message and invokes Spring's "convertAndSend" adding a destination identifier. The destination identifier is of the form "/topic/xxx/yyy"; a client can subscribe to topic xxx, perhaps refined by yyy to identify a particular client instance.  A marking on a port boundary can establish the topic value; a related mark can specify the name of a message parameter which, if present, supplies a message-specific topic refinement value.
 
+As more than one Port may formalize to an interface, and Ports may be marked differently, the architecture now supports multiple interfaces transformed from the same modeled interface definition. Generated interface files may use a suffix for differentiation.
+
 
 === 6 Work required
 
 . Add a mark named `ApplicationNature` to be applied to the application; a value "SpringApplication" is supported.
-. Add a mark named `PortType` to be applied to a port; a value "SpringWebSocket" is supported
+. Add a mark named `PortType` to be applied to a port; a value "SpringWebSocket" is supported.
+. Subtype Application, and an added PortDecriptor class, to capture transform specializations.
+. Modify the multiplicity of the transformed architectural interface to allow different renderings.
 . Develop template(s) for rendering WebSocket configuration and application initialization modification.
 . Develop template(s) to unpack parameters from inbound messages, directly invokng port activities.
 . Modify port templates as necessary to directly send serialized outbound messages.
@@ -61,15 +65,17 @@ Messages originating from an application port activity invoke an outbound handle
 . The marks named above are implemented along with `EndPoint`, `SubscriptionTopic` and `SubTopicParameter`.
 . The Application class is subtyped to allow for specialized rendering of imports and initialization.
 . Port class uses a subtyped PortDescriptor class for specialized rendering of imports and message handling.
-. Application and Port constructors are modified to account for invocation from Spring.
-. Port accessors render differently: Spring applications return a Port instance rather than creating it.
+. Application and Port constructors are modified to account for direct invocation from Spring.
+. Port accessors render differently: Spring applications must return a Port instance rather than creating it.
 . A generic `SpringMsgClass` is generated: its members are `messageName` and the serialized `payload` string.
 . The key `payload` retrieves a string in JSON format from which values are retrieved by parameter-name-as-key.
 . The Port send method is overridden to serialize messages; a `null` test overrides the `satisfied()` test.
-. Interfaces are rendered differently for WebSocket ports; the incoming messages carry message classes.
-. Multiple architectural interfaces can now be transformed from a metamodel definition.
+. Interfaces are rendered differently for WebSocket ports; the incoming messages carry message-specific instances.
+. Multiple architectural interfaces can now be transformed from a modeled interface definition.
 . A specialized (e.g. WebSocket) interface file is suffixed ("_sws") to differentiate it for marked port import.
 . A marking associates an 'endpoint' socket name with a port; this name is used to open a client connection.
+. A marking specifies a subscription topic associated with messages outgoing from a port.
+. A marking specifies the name of an optional message parameter whose value, if present, will be appended to the topic.
 
 
 === 8 Acceptance Test

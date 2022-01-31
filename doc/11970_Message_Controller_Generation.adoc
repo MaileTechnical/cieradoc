@@ -50,6 +50,7 @@ Several marks are used to direct the generation of message-controller capabiliti
 . Currently, only WebSocket communication within the Spring framework is supported
 . Each port marked as a WebSocket port must have a name that is unique within the application
 . Each deployment may contain only a single xtUML application
+. No more than one instance of a component may exist in a deployment
 
 === 5 Design
 

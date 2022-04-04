@@ -7,7 +7,7 @@ not supported.  This work adds support for such parameters.
 
 === 2 Introduction and Background
 
-Refer to <<dr-1>>, <<dr-2>> and <<dr-3>>for background.
+Refer to <<dr-1>>, <<dr-2>> for background.
 
 === 3 Requirements
 
@@ -111,10 +111,7 @@ for this issue. Issue 12191 explicitly represents, in the architecture, the sepa
 component-independent definition of a class from the component-specific class-in-component representation.
 
 It further seems reasonable to serialize the entire message if any of the message parameters are of type 
-`inst_ref<>` or `inst_ref_set<>`. Issue 12287 <<dr-3>> has provided the means to serialize messages based on an interface mark.
-This work adds recognition of such a parameter as a trigger to serialize a message.
-
-==== 5.4 File imports
+`inst_ref<>` or `inst_ref_set<>`. Thus, recognition of any such parameter triggers message serialization.
 
 Serialization
 
@@ -146,6 +143,11 @@ Develop a model supporting the test cases enumerated in <<8>>.
 
 === 7 Implementation Comments
 
+The render operation for messages requiring serialization is modified to generate invocation of a method to add a key-value 
+pair to the message for each paramter.
+The render-deliver operation for Port Message is modified to generate value retrieval using the parameter formal name as a 
+string key rather than by index for serialized messages.
+
 See reference below to "proof-of-concept" hand-edited example.
 
 === 8 Acceptance Test
@@ -172,6 +174,9 @@ for a class containing at least one attribute of each core type
 . one parameter of type `inst_ref_set<>` containing an empty instance-handle
 set
 
+A test case can be found at:
+https://github.com/xtuml/models/tree/master/VandMC_testing/SharedClasses/SharedClasses
+
 === 9 User Documentation
 
 Since lack of support for interface-message parameters of type `inst_ref<>` and 
@@ -186,4 +191,3 @@ https://github.com/MaileTechnical/ciera/pull/14
 
 . [[dr-1]] https://support.onefact.net/issues/12002[12002: Support interface message parameters of type inst_ref and inst_ref_set]
 . [[dr-2]] https://support.onefact.net/issues/12191[12191: Reusing a class in multiple domains]
-. [[dr-3]] https://support.onefact.net/issues/12287[12287: Replace positional Port Message parameters with key-value pair encoding]

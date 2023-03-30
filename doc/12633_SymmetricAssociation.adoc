@@ -63,32 +63,35 @@ from the associative class to the 'reflexed' class.
 
 ==== 6.1 Simple binary reflexive
 
- Transform of selectors is modified to avoid generating two selectors for the participant class.
- Transformation of Relate and Unrelate statements are modified to use the single role phrase.
- Modification of the unrelate logic to try both attempts at removal of Relationship instances.
+* Transform of selectors is modified to avoid generating two selectors for the participant class.
+* Transformation of Relate and Unrelate statements are modified to use the single role phrase.
+* Modification of the unrelate logic to try both attempts at removal of Relationship instances.
 
 ==== 6.2 Associative reflexive
 
- At transform, the association is not split into two relationships.
- The association chain link is not resolved into a pair of links to and from the associative class.
- Transform of selectors is modified to generate a peer-to-peer selector for the 'reflexed' class.
- The peer-to-peer selector is rendered to return only the non-originating related instance(s)
+* At transform, the association is not split into two relationships.
+* The association chain link is not resolved into a pair of links to and from the associative class.
+* Transform of selectors is modified to generate a peer-to-peer selector for the 'reflexed' class.
+* The peer-to-peer selector is rendered to return only the non-originating related instance(s)
  
 === 7 Implementation Comments
 
-A utility function was added to distinguish the symmetric associative reflexive case.
-An attribute denoting symmetry was added to the Relationship class.
-An attribute was added to the Selector class to distinguish the part-to-part associative case.
-An addition to transformAttributereference allowed for role phrase placement difference. 
+* A utility function was added to distinguish the symmetric associative reflexive case.
+* An attribute denoting symmetry was added to the Relationship class.
+* An attribute was added to the Selector class to distinguish the part-to-part associative case.
+* Several transform operations were modified to allow for role phrase placement difference.
+* Several render operations and templates were modified; some new templates added.
 
 
 === 8 Acceptance Test
 
-The test case developed for Verifier enhancements, when compiled with the modified compiler. should 
+The test case developed for Verifier enhancements when compiled with the modified compiler should 
 perform exactly as in Verifier.
 
+ https://github.com/xtuml/models/tree/master/VandMC_testing/Symmetrics
+ 
+ 
 === 9 User Documentation
-
 
 
 === 10 Code Changes
@@ -96,9 +99,6 @@ perform exactly as in Verifier.
 - fork/repository: https://github.com/amullarney/ciera
 - branch: 12633_SymmetricAssociation
 
-----
- Put the file list here
-----
 
 === 11 Document References
 

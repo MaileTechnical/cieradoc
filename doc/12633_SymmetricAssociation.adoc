@@ -10,17 +10,15 @@ Ciera model compiler.
 
 The rationale for this enhancement is given in <<dr-1>>, the analysis note for the BridgePoint 
 work. See also the original issue, <<dr-2>>. In short, modeling friendship, for instance, 
-with phrases such as 'knows' and 'is known by' is artifical; the concept is reciprocal. In 
-this document, the term 'association' will be used for the modeled concept; the term 'relationship' 
+with phrases such as 'knows' and 'is known by' is artifical; the concept is reciprocal.
+
+In this document, the term 'association' will be used for the modeled concept; the term 'relationship' 
 will be used for the Ciera architectural realization.
 
 === 3 Requirements
 
-==== 3.1 Item
-
 The behaviors of 'relate (using)', 'select', 'unrelate (using)' should match those of BridgePoint 
 Verifier. 
-
 
 === 4 Analysis
 

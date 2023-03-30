@@ -37,14 +37,18 @@ instances, each of which maintains a pair of instance identifiers for two partic
 
 For reflexive associations there are two distinct cases to be addressed:
 
- Binary reflexive associations are supported using two selectors in the class, named with the differing role phrases.
+==== 5.1 Simple Binary Reflexive
+
+Binary reflexive associations are supported using two selectors in the class, named with the differing role phrases.
 This supports the concept of 'direction' in the establishment and navigation of the relationship. In the 
 symmetric case it is a minimal change to suppress the rendering of the second selector, allowing the 
 linkage between instances to become symmetric. The removal of Relationship instances from the 
 relationship extent is slightly problematic: the ordering of the two participant IDs is significant. 
 Hence, the unrelate logic is modified to try both possible orderings of the ID pair.
 
- In the asymmetric associative reflexive case Ciera breaks the linked association into a pair of simple binary 
+==== 5.1 Associative Reflexive
+
+In the asymmetric associative reflexive case Ciera breaks the linked association into a pair of simple binary 
 relationships between the participant 'reflexed' class and the associative link class,  
 sharing the same relationship number but differing by role phrase, which, again, support the concept 
 of direction. Note that the associative class maintains a selector for each of the contributing 
@@ -72,6 +76,11 @@ from the associative class to the 'reflexed' class.
  
 === 7 Implementation Comments
 
+A utility function was added to distinguish the symmetric associative reflexive case.
+An attribute denoting symmetry was added to the Relationship class.
+An attribute was added to the Selector class to distinguish the part-to-part associative case.
+An addition to transformAttributereference allowed for role phrase placement difference. 
+
 
 === 8 Acceptance Test
 
@@ -80,12 +89,12 @@ perform exactly as in Verifier.
 
 === 9 User Documentation
 
-Describe the end user documentation that was added for this change.
+
 
 === 10 Code Changes
 
-- fork/repository: your_fork/repo_name
-- branch: your_branch_name_here
+- fork/repository: https://github.com/amullarney/ciera
+- branch: 12633_SymmetricAssociation
 
 ----
  Put the file list here

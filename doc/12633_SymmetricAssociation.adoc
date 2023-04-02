@@ -9,7 +9,7 @@ Ciera model compiler.
 === 2 Introduction and Background
 
 The rationale for this enhancement is given in <<dr-1>>, the analysis note for the BridgePoint 
-work. See also the original issue, <<dr-2>>. In short, modeling friendship, for instance, 
+work. See also the original issue, <<dr-2>>. In short, modeling acquaintanceship, for instance, 
 with phrases such as 'knows' and 'is known by' is artifical; the concept is reciprocal.
 
 In this document, the term 'association' will be used for the modeled concept; the term 'relationship' 
@@ -24,7 +24,7 @@ Verifier.
 
 The dependency on distinct role phrases for reflexive associations must be removed, 
 recognizing that a symmetric association may be established and traversed in either 
-direction.
+direction, using the one shared role phrase.
 
 === 5 Design
 
@@ -53,9 +53,10 @@ of direction. Note that the associative class maintains a selector for each of t
 binary relationships. For the symmetric case only one relationship is maintained, however the selector 
 in the associative class is made multi-valued regardless of original association multiplicity. An additional 
 peer-to-peer selector is generated for the 'reflexed' class. The implementation of this peer-to-peer selector 
-navigates via the associative class, returning all values from the associative class selector(s), but with the 
+navigates via the associative class, returning all values from the associative class selector, but with the 
 originating instance removed. The relationship extent management is not an issue: the ID ordering is always 
-from the associative class to the 'reflexed' class.
+from the associative class to the 'reflexed' class and, hence, the removal of Relationship instances is not 
+affected.
 
 === 6 Work required
 
@@ -70,7 +71,8 @@ from the associative class to the 'reflexed' class.
 * At transform, the association is not split into two relationships.
 * The association chain link is not resolved into a pair of links to and from the associative class.
 * Transform of selectors is modified to generate a peer-to-peer selector for the 'reflexed' class.
-* The peer-to-peer selector is rendered to return only the non-originating related instance(s)
+* No storage is allocated for the peer-to-peer selector; it is used only for navigation.
+* The peer-to-peer selector is rendered to return only the non-originating related instance.
  
 === 7 Implementation Comments
 

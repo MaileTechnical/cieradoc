@@ -1,0 +1,109 @@
+== 12633 Symmetric Association
+
+=== 1 Abstract
+
+BridgePoint has been enhanced to support the definition of symmetric reflexive associations 
+and Verifier has been enhanced to support their use. This work extends the capability to the 
+Ciera model compiler.   
+
+=== 2 Introduction and Background
+
+The rationale for this enhancement is given in <<dr-1>>, the analysis note for the BridgePoint 
+work. See also the original issue, <<dr-2>>. In short, modeling acquaintanceship, for instance, 
+with phrases such as 'knows' and 'is known by' is artifical; the concept is reciprocal.
+
+In this document, the term 'association' will be used for the modeled concept; the term 'relationship' 
+will be used for the Ciera architectural realization. The term reflexed will be used to denote the 
+single class which occupies both 'sides' of the association, as distinct from any associative class 
+that may be involved. The term 'Transform' refers to that phase of the model compilation process.
+
+=== 3 Requirements
+
+The behaviors of 'relate (using)', 'select', 'unrelate (using)' should match those of BridgePoint 
+Verifier. 
+
+=== 4 Analysis
+
+The dependency on distinct role phrases for reflexive associations must be removed, 
+recognizing that a symmetric association may be established and traversed in either 
+direction, using the one shared role phrase.
+
+=== 5 Design
+
+For a simple binary association, the Ciera architecture renders a 'selector' - a pointer or 
+set of pointers - in each of the participant classes which serve to relate instances. Each 
+relationship also manages, in an relationship-specific extent, a collection of Relationship 
+instances, each of which maintains a pair of instance identifiers for two participant instances.
+
+For reflexive associations there are two distinct cases to be addressed:
+
+==== 5.1 Simple Binary Reflexive
+
+Binary reflexive associations are supported using two selectors in the class, named with the differing role phrases.
+This supports the concept of 'direction' in the establishment and navigation of the relationship. In the 
+symmetric case it is a minimal change to suppress the rendering of the second selector, allowing the 
+linkage between instances to become symmetric. The removal of Relationship instances from the 
+relationship extent is slightly problematic: the ordering of the two participant IDs is significant. 
+Hence, the unrelate logic is modified to try both possible orderings of the ID pair.
+
+==== 5.1 Associative Reflexive
+
+In the non-symmetric associative reflexive case Ciera breaks the linked association into a pair of simple 
+binary relationships between the participant reflexed class and the associative link class,  
+sharing the same relationship number but differing by role phrase, which, again, supports the concept 
+of direction. Note that the associative class maintains a selector for each of the contributing 
+binary relationships. For the symmetric case only one relationship is maintained, however the selector 
+in the associative class is made multi-valued regardless of original association multiplicity. An additional 
+peer-to-peer selector is generated for the reflexed class. The implementation of this peer-to-peer selector 
+navigates via the associative class, returning all values from the associative class selector, but with the 
+originating ( the 'left' instance in this navigational link ) instance removed. The relationship extent 
+management is not an issue: the ID ordering is always from the associative class to the reflexed class and, 
+hence, the removal of Relationship instances is not 
+affected.
+
+=== 6 Work required
+
+==== 6.1 Simple binary reflexive
+
+* Transform of selectors is modified to avoid generating two selectors for the participant class.
+* Transform of Relate and Unrelate statements are modified to use the single role phrase.
+* Modification of the unrelate logic to try both attempts at removal of Relationship instances.
+
+==== 6.2 Associative reflexive
+
+* At transform, the association is not split into two relationships.
+* The association chain link is not resolved into a pair of links to and from the associative class.
+* Transform of selectors is modified to generate a peer-to-peer selector for the reflexed class.
+* No additional storage is allocated for the peer-to-peer selector; it is used only for navigation.
+* The peer-to-peer selector is rendered to return only the non-originating related instance.
+ 
+=== 7 Implementation Comments
+
+* A utility function was added to distinguish the symmetric associative reflexive case.
+* An attribute denoting symmetry was added to the Relationship class.
+* An attribute was added to the Selector class to distinguish the part-to-part associative case.
+* Several transform operations were modified to allow for role phrase placement difference.
+* Several render operations and templates were modified; some new templates added.
+
+
+=== 8 Acceptance Test
+
+The test case developed for Verifier enhancements when compiled with the modified compiler should 
+perform exactly as in Verifier.
+
+ https://github.com/xtuml/models/tree/master/VandMC_testing/Symmetrics
+ 
+ 
+=== 9 User Documentation
+
+
+=== 10 Code Changes
+
+- fork/repository: https://github.com/amullarney/ciera
+- branch: 12633_SymmetricAssociation
+
+
+=== 11 Document References
+
+. [[dr-1]] https://github.com/xtuml/bridgepoint/blob/master/doc-bridgepoint/notes/12548_Symmetric_Reflexive_Associations/12548_Symmetric_Reflexive_Associations_ant.adoc
+. [[dr-2]] https://support.onefact.net/issues/12548
